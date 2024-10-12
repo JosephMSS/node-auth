@@ -7,6 +7,7 @@ import {
   Role,
   UserEntity,
 } from "../../domain"
+import { UserMapper } from "../mappers/user.mapper"
 
 type HashFunction = (password: string) => string
 type CompareFunction = (password: string, hashPassword: string) => boolean
@@ -32,13 +33,7 @@ export class AuthDataSourceImpl implements AuthDatasource {
         role: [Role.USER_ROLE],
       })
       await newUser.save()
-      return new UserEntity(
-        newUser._id.toString(),
-        newUser.name,
-        newUser.email,
-        newUser.password,
-        newUser.role as Role[]
-      )
+      return UserMapper.userEntityFromObject(newUser)
     } catch (error) {
       //si es un error custom que lo lance y ya tendíamos nuestro handler de estos errores en especifico
       if (error instanceof CustomerError) {
