@@ -1,5 +1,6 @@
 import { envs } from "./config"
 import { MongoDatabase } from "./data"
+import { handleErrorCustomError } from "./presentation/middlewares"
 import { AppRoutes } from "./presentation/routes"
 import { Options, Server } from "./presentation/server"
 ;(() => {
@@ -16,7 +17,9 @@ async function main() {
   const options: Options = {
     port: envs.port,
     routes: AppRoutes.routes,
+    middlewares: [handleErrorCustomError],
   }
   const server = new Server(options)
+
   await server.start()
 }

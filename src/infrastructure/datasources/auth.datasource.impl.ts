@@ -2,7 +2,7 @@ import { BcryptAdapter } from "../../config"
 import { UserModel } from "../../data"
 import {
   AuthDatasource,
-  CustomerError,
+  CustomError,
   RegisterUserDto,
   Role,
   UserEntity,
@@ -23,7 +23,7 @@ export class AuthDataSourceImpl implements AuthDatasource {
       // 1. verificar si ya existe el email
       const userExist = await this.userModel.findOne({ email })
       if (userExist) {
-        throw CustomerError.badRequest("User already exists")
+        throw CustomError.badRequest("User already exists")
       }
       // 2. hash la contraseña es correcta
       const newUser = await this.userModel.create({
@@ -36,10 +36,10 @@ export class AuthDataSourceImpl implements AuthDatasource {
       return UserMapper.userEntityFromObject(newUser)
     } catch (error) {
       //si es un error custom que lo lance y ya tendíamos nuestro handler de estos errores en especifico
-      if (error instanceof CustomerError) {
+      if (error instanceof CustomError) {
         throw error
       }
-      throw CustomerError.internalServerError()
+      throw CustomError.internalServerError()
     }
   }
   login(email: string, password: string): Promise<any> {

@@ -1,24 +1,24 @@
-export class CustomerError extends Error {
+export class CustomError extends Error {
   constructor(
-    public readonly statusCode: string,
+    public readonly statusCode: number,
     public readonly message: string
   ) {
     super(message)
   }
   static badRequest(message: string) {
-    return new CustomerError("400", message)
+    return new CustomError(400, message)
   }
   static unauthorized(message: string) {
-    return new CustomerError("401", message)
+    return new CustomError(401, message)
   }
   static forbidden(message: string) {
-    return new CustomerError("403", message)
+    return new CustomError(403, message)
   }
   static notFound(message: string) {
-    return new CustomerError("404", message)
+    return new CustomError(404, message)
   }
-  static internalServerError(message: string= "Internal Server Error") {
+  static internalServerError(message: string = "Internal Server Error") {
     console.log(message)
-    return new CustomerError("500", message)
+    return new CustomError(500, message)
   }
 }
