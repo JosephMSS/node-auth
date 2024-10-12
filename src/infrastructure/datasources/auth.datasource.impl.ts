@@ -1,22 +1,37 @@
+import { UserModel } from "../../data"
 import {
   AuthDatasource,
   CustomerError,
   RegisterUserDto,
   UserEntity,
+  Role,
 } from "../../domain"
 
 export class AuthDataSourceImpl implements AuthDatasource {
+  private userModel = UserModel
   async register(registerUserDto: RegisterUserDto): Promise<UserEntity> {
     const { email, name, password } = registerUserDto
     try {
       // 1. verificar si ya existe el email
-      if (email === "admin@mail.com") {
-        throw CustomerError.badRequest("El email ya existe")
+      const userExist = await this.userModel.findOne({ email })
+      if (userExist) {
+        throw CustomerError.badRequest("User already exists")
       }
       // 2. hash la contraseña es correcta
-
-      //aqui iría la lógica de login
-      return new UserEntity("1", name, email, password, ["admin"])
+      const newUser = await this.userModel.create({
+        email,
+        name,
+        password,
+        role: [Role.USER_ROLE],
+      })
+      await newUser.save()
+      return new UserEntity(
+        newUser._id.toString(),
+        newUser.name,
+        newUser.email,
+        newUser.password,
+        newUser.role as Role[]
+      )
     } catch (error) {
       //si es un error custom que lo lance y ya tendíamos nuestro handler de estos errores en especifico
       if (error instanceof CustomerError) {
