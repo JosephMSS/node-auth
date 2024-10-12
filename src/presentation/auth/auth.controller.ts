@@ -5,6 +5,7 @@ import {
   RegisterUserDto,
   UserEntity,
 } from "../../domain"
+import { JwtAdapter } from "../../config/jwt.adapter"
 
 /**
  * De esta manera evito que el this cambie
@@ -20,8 +21,14 @@ export class AuthController {
     if (error) return res.status(400).json({ error })
     this.authRepository
       .register(registerUserDto!)
-      .then((registeredUser) => {
-        return res.status(201).json(registeredUser)
+      .then(async (registeredUser) => {
+        return res.status(201).json({
+          user: registeredUser,
+          token: await JwtAdapter.generateToken({
+            id: registeredUser.id,
+            email: registeredUser.email,
+          }),
+        })
       })
       .catch((error) => {
         next(error)
