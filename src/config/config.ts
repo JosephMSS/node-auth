@@ -7,6 +7,7 @@ interface DatabaseConfiguration {
 interface Config {
   port: number
   database: Record<string, DatabaseConfiguration>
+  libs: Record<string, any>
 }
 export const envs: Config = {
   port: get("PORT").required().asPortNumber(),
@@ -14,6 +15,11 @@ export const envs: Config = {
     mongo: {
       url: get("MONGO_URL").required().asString(),
       dbName: get("MONGO_DATABASE").required().asString(),
+    },
+  },
+  libs: {
+    jwt: {
+      secret: get("JWT_SECRET").required().asString(),
     },
   },
 }

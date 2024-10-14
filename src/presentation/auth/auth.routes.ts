@@ -1,6 +1,7 @@
 import { Router } from "express"
 import { AuthController } from "./auth.controller"
 import { AuthDataSourceImpl, AuthRepositoryImpl } from "../../infrastructure"
+import { AuthMiddleware } from "../middlewares/auth.middleware"
 
 export class AuthRoutes {
   /**
@@ -15,6 +16,9 @@ export class AuthRoutes {
     router.post("/login", controller.login)
     // @ts-expect-error
     router.post("/register", controller.register)
+    // @ts-expect-error
+    router.get("/", [AuthMiddleware.validateJwt], controller.find)
+
     return router
   }
 }

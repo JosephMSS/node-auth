@@ -1,22 +1,15 @@
 import express, { NextFunction, Request, Response, Router } from "express"
-export type ErrorHandler = (
-  error: unknown,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => void
-type Middlewares = ErrorHandler[]
 export interface Options {
   port?: number
   routes: Router
-  middlewares?: Middlewares
+  middlewares?: any[]
 }
 // TODO: poR QUE AQUEI ESTOY USANDO EXPRESS DIRECTAMANTE Y NO POR INYECCION
 export class Server {
   public readonly app = express()
   private port: number
   private routes: Router
-  private middlewares: Middlewares
+  private middlewares: any[] = []
   constructor(options: Options) {
     const { port = 3001, routes, middlewares = [] } = options
     this.port = port

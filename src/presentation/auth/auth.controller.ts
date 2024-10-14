@@ -1,11 +1,7 @@
 import { NextFunction, Request, Response } from "express"
-import {
-  AuthRepository,
-  CustomError,
-  RegisterUserDto,
-  UserEntity,
-} from "../../domain"
 import { JwtAdapter } from "../../config/jwt.adapter"
+import { UserModel } from "../../data"
+import { AuthRepository, RegisterUserDto } from "../../domain"
 
 /**
  * De esta manera evito que el this cambie
@@ -29,6 +25,15 @@ export class AuthController {
             email: registeredUser.email,
           }),
         })
+      })
+      .catch((error) => {
+        next(error)
+      })
+  }
+  find = async (req: Request, res: Response, next: NextFunction) => {
+    UserModel.find()
+      .then((users) => {
+        res.json({ users, user: req.body.user })
       })
       .catch((error) => {
         next(error)

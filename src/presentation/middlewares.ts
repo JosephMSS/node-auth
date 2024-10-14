@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response } from "express"
 import { CustomError } from "../domain"
-import { ErrorHandler } from "./server"
-export const handleErrorCustomError: ErrorHandler = (
+export const handleErrorCustomError = (
   error: unknown,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) => {
   if (error instanceof CustomError) {
     return res.status(error.statusCode).json({ error: error.message })
